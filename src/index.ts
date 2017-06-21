@@ -12,7 +12,7 @@ export default class GitDiffFiles {
 
   constructor(dirPath: string, tag: string) {
     this.tag = tag;
-    this.dirPath = resolve(__dirname, dirPath);
+    this.dirPath = resolve(process.cwd(), dirPath);
   }
 
   public start() {
