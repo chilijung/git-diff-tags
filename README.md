@@ -42,9 +42,9 @@ diff.start()
 
 ## API
 
-### GitDiffTags(dirPath: string, tagFrom: string, tagTo: string)
+### GitDiffTags(dirPath: string, tagFrom: string?, tagTo: string?)
 
-create a reference.
+create a reference. If `tagTo` is null diff from `tagFrom` to `HEAD`. if `tagFrom` is null set to last tag.
 
 ### diffTag.start(): Promise<ConvenientPatch[]>
 
