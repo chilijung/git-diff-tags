@@ -24,6 +24,8 @@ import GitDiffFiles from "../src/index";
 const diff = new GitDiffFiles("./", "v0.2.0", "v0.2.0-a");
 // can also diff to HEAD
 // const diff = new GitDiffFiles("./", "v0.2.0", null);
+// diff last tag to HEAD
+// const diff = new GitDiffFiles("./", null, null);
 
 
 diff.start()
