@@ -40,6 +40,16 @@ diff.start()
       });
 ```
 
+## API
+
+### GitDiffTags(dirPath: string, tagFrom: string, tagTo: string)
+
+create a reference.
+
+### diffTag.start(): Promise<ConvenientPatch[]>
+
+return a ConvenientPath array, see http://www.nodegit.org/api/convenient_patch.
+
 ## Demo usage in gulp
 
 In our team, we use this package with gulpjs. To upload only the modified and added files to server
