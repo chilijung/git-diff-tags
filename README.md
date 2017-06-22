@@ -19,13 +19,13 @@ npm install git-diff-tags
 ## Usage
 
 ```js
-import GitDiffFiles from "../src/index";
+import GitDiffTags from "../src/index";
 
-const diff = new GitDiffFiles("./", "v0.2.0", "v0.2.0-a");
+const diff = new GitDiffTags("./", "v0.2.0", "v0.2.0-a");
 // can also diff to HEAD
-// const diff = new GitDiffFiles("./", "v0.2.0", null);
+// const diff = new GitDiffTags("./", "v0.2.0", null);
 // diff last tag to HEAD
-// const diff = new GitDiffFiles("./", null, null);
+// const diff = new GitDiffTags("./", null, null);
 
 
 diff.start()
@@ -34,11 +34,47 @@ diff.start()
         // result is a ConvenientPatch[]
         // please reference to nodegit[ConvenientPatch]: http://www.nodegit.org/api/convenient_patch
 
-
       })
       .catch((err) => {
         throw(new Error(err));
       });
+```
+
+## Demo usage in gulp
+
+In our team, we use this package with gulpjs. To upload only the modified and added files to server
+
+example:
+
+```js
+const gulp = require('gulp');
+const path = require('path');
+const imagemin = require('gulp-imagemin');
+const rimraf = require('rimraf');
+const GitDiffTags = require('git-diff-tags').default;
+
+gulp.task('image', function() {
+  rimraf.sync(path.resolve('./public/images_dist'));
+  const diff = new GitDiffTags('./');
+
+  return diff.start()
+      .then(result => {
+        let addedFiles = [];
+        result.forEach(patch => {
+          const filePath = patch.newFile().path();
+          if ((patch.isAdded() || patch.isModified()) && filePath.match(/^public\/image.*(\.png|\.gif)$/g))
+            addedFiles.push(filePath);
+        });
+
+        return gulp.src(addedFiles, {base: "public/images"})
+          .pipe(imagemin({verbose: true}))
+          .pipe(gulp.dest('./public/images_dist'));
+      })
+      .catch(err => {
+        throw (new Error(err));
+      });
+});
+
 ```
 
 ## install troubleshooting

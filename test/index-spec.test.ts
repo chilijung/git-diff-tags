@@ -1,10 +1,10 @@
 import {expect} from "chai";
 import {DiffFile, Repository, Tag} from "nodegit";
-import GitDiffFiles from "../src/index";
+import GitDiffTags from "../src/index";
 
 describe("diff files between tags", () => {
   it("should get modified package.json", (done) => {
-    const diff = new GitDiffFiles("./", "v0.2.0", "v0.2.0-a");
+    const diff = new GitDiffTags("./", "v0.2.0", "v0.2.0-a");
 
     diff.start()
       .then((result) => {
@@ -20,7 +20,7 @@ describe("diff files between tags", () => {
   });
 
   it("should get created file test/test-new-file.js", (done) => {
-    const diff = new GitDiffFiles("./", "v0.2.0-a", "v0.2.0-b");
+    const diff = new GitDiffTags("./", "v0.2.0-a", "v0.2.0-b");
 
     diff.start()
       .then((result) => {
@@ -36,7 +36,7 @@ describe("diff files between tags", () => {
   });
 
   it("should delete file test/test-new-file.js", (done) => {
-    const diff = new GitDiffFiles("./", "v0.2.0-b", "v0.2.0-c");
+    const diff = new GitDiffTags("./", "v0.2.0-b", "v0.2.0-c");
 
     diff.start()
       .then((result) => {
@@ -52,7 +52,7 @@ describe("diff files between tags", () => {
   });
 
   it("should diff through three version tags", (done) => {
-    const diff = new GitDiffFiles("./", "v0.2.0", "v0.2.0-c");
+    const diff = new GitDiffTags("./", "v0.2.0", "v0.2.0-c");
 
     diff.start()
       .then((result) => {
@@ -69,7 +69,7 @@ describe("diff files between tags", () => {
   });
 
   it("get last tag if tagFrom is null", (done) => {
-    const diff = new GitDiffFiles("./", null, null);
+    const diff = new GitDiffTags("./", null, null);
 
     diff.start()
       .then((result) => {
