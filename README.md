@@ -59,6 +59,7 @@ gulp.task('image', function() {
 
   return diff.start()
       .then(result => {
+        // find out what assets are modified or added since last tag.
         let addedFiles = [];
         result.forEach(patch => {
           const filePath = patch.newFile().path();
