@@ -1,6 +1,6 @@
 {
   "name": "git-diff-tags",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "description": "git-diff-tags",
   "license": "MIT",
   "repository": "",
@@ -16,6 +16,7 @@
   "scripts": {
     "clean": "rimraf lib",
     "lint": "tslint --force --format verbose \"src/**/*.ts\"",
+    "prepublish": "npm run build",
     "build": "npm run clean && npm run lint && echo Using TypeScript && tsc --version && tsc --pretty",
     "test": "npm run build && mocha --compilers ts:ts-node/register --recursive 'test/**/*-spec.ts'",
     "coverage": "nyc --include='src/**/*.ts' --reporter=text --reporter=html --reporter=lcov mocha --compilers ts:ts-node/register --recursive 'test/**/*.test.ts'",

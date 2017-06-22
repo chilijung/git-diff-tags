@@ -8,8 +8,6 @@ export default class GitDiffFiles {
   private summary: object;
   private headCommitTree: Tree;
   private tagCommitTree: Tree;
-  private newFilesAttributes: DiffFile[];
-  private oldFilesAttributes: DiffFile[];
 
   constructor(dirPath: string, tagFrom: string, tagTo: string) {
     this.tagFrom = tagFrom;
@@ -66,17 +64,7 @@ export default class GitDiffFiles {
     return Diff.treeToTree(repo, this.tagCommitTree, this.headCommitTree, null);
   }
 
-  private diff = (diff: Diff): Promise<DiffFile[][]> => {
-    this.newFilesAttributes = [];
-    this.oldFilesAttributes = [];
-    return diff.patches()
-      .then((patches: ConvenientPatch[]) => {
-        patches.forEach((patch) => {
-          this.newFilesAttributes.push(patch.newFile());
-          this.oldFilesAttributes.push(patch.oldFile());
-        });
-
-        return [this.newFilesAttributes, this.oldFilesAttributes];
-      });
+  private diff = (diff: Diff): Promise<ConvenientPatch[]> => {
+    return diff.patches();
   }
 }
