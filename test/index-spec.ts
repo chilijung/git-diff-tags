@@ -4,10 +4,10 @@ import GitDiffFiles from "../src/index";
 
 describe("index", () => {
   it("should get summary", (done) => {
-    const diff = new GitDiffFiles("./", "0.1.0");
+    const diff = new GitDiffFiles("./", "0.1.0", "v0.1.0");
 
     diff.start()
-      .then((result: DiffFile[][]) => {
+      .then((result) => {
         console.log(result);
         done();
       })
