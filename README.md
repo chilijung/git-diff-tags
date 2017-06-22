@@ -45,6 +45,12 @@ diff.start()
 
 If you can't install `nodegit` see link below.
 
+Mac:
+
+```
+sudo xcode-select --install
+```
+
 https://github.com/nodegit/nodegit/issues/1134
 
 ## License
