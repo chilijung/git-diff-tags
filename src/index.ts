@@ -25,7 +25,6 @@ export default class GitDiffFiles {
 
   private getTagToCommit = (repo: Repository): Promise<Repository> => {
     const getTagTo = this.tagTo != null ? this.getTag(repo, this.tagTo) : repo.getHeadCommit();
-
     return getTagTo
             .then((commit) => {
               return commit.getTree();
@@ -37,9 +36,7 @@ export default class GitDiffFiles {
   }
 
   private getTagFromCommit = (repo: Repository): Promise<Repository> => {
-
     const getTagFrom = this.getTag(repo, this.tagFrom);
-
     return getTagFrom
       .then((commit) => {
         return commit.getTree();
