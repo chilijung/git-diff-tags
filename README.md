@@ -6,7 +6,7 @@ Using git diff to get change files between commits or tags.
 
 In our team [Canner](https://www.canner.io/) we encounter a big problem while publishing our assets (images, fonts, ...etc) to s3 server, each time with a new release we need to upload all our assets to s3. Before this package we don't know what files are already uploaded, so we uploaded all the files each time we're going to deploy.
 
-In order to solve it is using `git-diff-tags` to find out which files is modified, created, deleted ...etc, between each tags and upload needed files and folders.
+In order to solve it, we develop `git-diff-tags` to find out which files are modified, created, deleted ...etc, between each tags and upload needed files and folders.
 
 `git-diff-tags` let you find out what files, are being modified, created, deleted between tags with ease. Hope this also helps in your project. :)
 
