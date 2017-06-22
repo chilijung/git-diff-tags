@@ -23,8 +23,7 @@
     "watch:test": "npm run test -- --watch"
   },
   "dependencies": {
-    "nodegit": "^0.18.3",
-    "simple-git": "^1.73.0"
+    "nodegit": "^0.18.3"
   },
   "devDependencies": {
     "@types/chai": "^3.0.0",
