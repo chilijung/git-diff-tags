@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {DiffFile} from "nodegit";
+import {DiffFile, Repository, Tag} from "nodegit";
 import GitDiffFiles from "../src/index";
 
 describe("diff files between tags", () => {
@@ -61,6 +61,28 @@ describe("diff files between tags", () => {
         expect(result[0].isDeleted()).to.be.false; // tslint:disable-line
         expect(result[0].isModified()).to.be.true; // tslint:disable-line
         expect(result[0].newFile().path()).eql("package.json"); // tslint:disable-line
+        done();
+      })
+      .catch((err) => {
+        done(new Error(err));
+      });
+  });
+
+  it("get last tag if tagFrom is null", (done) => {
+    const diff = new GitDiffFiles("./", null, null);
+
+    diff.start()
+      .then((result) => {
+        return Repository.open("./")
+          .then((repo) => {
+            return Tag.list(repo).then((arr) => {
+              return arr[arr.length - 1];
+            });
+          });
+      })
+      .then((lastTag) => {
+        expect(diff.getTagFrom()).equals(lastTag);
+
         done();
       })
       .catch((err) => {

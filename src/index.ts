@@ -5,7 +5,6 @@ export default class GitDiffFiles {
   private tagFrom: string;
   private tagTo: string;
   private dirPath: string;
-  private summary: object;
   private headCommitTree: Tree;
   private tagCommitTree: Tree;
 
@@ -15,7 +14,7 @@ export default class GitDiffFiles {
     this.dirPath = resolve(process.cwd(), dirPath);
   }
 
-  public start() {
+  public start(): Promise<ConvenientPatch[]> {
     return Repository.open(this.dirPath)
       .then(this.getTagFromCommit)
       .then(this.getTagToCommit)
@@ -23,8 +22,16 @@ export default class GitDiffFiles {
       .then(this.diff);
   }
 
+  public getTagFrom() {
+    return this.tagFrom;
+  }
+
+  public getTagTo() {
+    return this.tagTo;
+  }
+
   private getTagToCommit = (repo: Repository): Promise<Repository> => {
-    const getTagTo = this.tagTo != null ? this.getTag(repo, this.tagTo) : repo.getHeadCommit();
+    const getTagTo = this.tagTo ? this.getTag(repo, this.tagTo) : repo.getHeadCommit();
     return getTagTo
             .then((commit) => {
               return commit.getTree();
@@ -48,7 +55,19 @@ export default class GitDiffFiles {
   }
 
   private getTag(repo: Repository, getTagShort: string): Promise<Commit> {
-    return repo.getTagByName(getTagShort)
+    return Tag.list(repo).then((arr) => {
+          if (!getTagShort) {
+            getTagShort = arr[arr.length - 1];
+            this.tagFrom = getTagShort;
+          }
+
+          // check if tags are exist.
+          if (arr.indexOf(getTagShort) === -1) {
+            // not found tag
+            throw new Error(`Make sure your tag is in the right name, can't find tag: ${getTagShort}`);
+          }
+          return repo.getTagByName(getTagShort);
+        })
         .then((tag) => {
           return repo.getCommit(tag.targetId());
         })
