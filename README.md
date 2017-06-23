@@ -8,7 +8,7 @@ In our team [Canner](https://www.canner.io/) we encounter a big problem while pu
 
 In order to solve it, we develop `git-diff-tags` to find out which files are modified, created, deleted ...etc, between each tags and upload needed files and folders.
 
-`git-diff-tags` let you find out what files, are being modified, created, deleted between tags with ease. Hope this also helps in your project. :)
+`git-diff-tags` let you find out what files are modified, created, deleted between tags with ease. Hope this also help in your projects. :)
 
 ## Install
 
