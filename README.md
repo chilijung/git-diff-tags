@@ -1,6 +1,6 @@
 # git-diff-tags
 
-Using git diff to get change files between commits or tags.
+Using git diff to get change files between tags.
 
 ## Why?
 
@@ -22,9 +22,9 @@ npm install git-diff-tags
 import GitDiffTags from "../src/index";
 
 const diff = new GitDiffTags("./", "v0.2.0", "v0.2.0-a");
-// can also diff to HEAD
+// can also diff to current git state
 // const diff = new GitDiffTags("./", "v0.2.0", null);
-// diff last tag to HEAD
+// diff last tag to current git state
 // const diff = new GitDiffTags("./", null, null);
 
 
