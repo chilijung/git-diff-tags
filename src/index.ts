@@ -1,7 +1,7 @@
 import {Commit, ConvenientPatch, Diff, DiffFile, Oid, Repository, Tag, Tree} from "nodegit";
 import {resolve} from "path";
 
-export default class GitDiffFiles {
+export default class GitDiffTags {
   private tagFrom: string;
   private tagTo: string;
   private dirPath: string;
