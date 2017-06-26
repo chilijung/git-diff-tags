@@ -69,7 +69,7 @@ describe("diff files between tags", () => {
   });
 
   it("get last tag if tagFrom is null", (done) => {
-    const diff = new GitDiffTags("./", null, null);
+    const diff = new GitDiffTags("./");
 
     diff.start()
       .then((result) => {
@@ -81,7 +81,7 @@ describe("diff files between tags", () => {
           });
       })
       .then((lastTag) => {
-        expect(diff.getTagFrom()).equals(lastTag);
+        expect(diff.getTagFrom).equals(lastTag);
 
         done();
       })

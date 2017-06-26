@@ -23,9 +23,9 @@ import GitDiffTags from "../src/index";
 
 const diff = new GitDiffTags("./", "v0.2.0", "v0.2.0-a");
 // can also diff to HEAD commit
-// const diff = new GitDiffTags("./", "v0.2.0", null);
+// const diff = new GitDiffTags("./", "v0.2.0");
 // diff last tag to HEAD commit
-// const diff = new GitDiffTags("./", null, null);
+// const diff = new GitDiffTags("./");
 
 
 diff.start()

@@ -8,7 +8,7 @@ export default class GitDiffTags {
   private headCommitTree: Tree;
   private tagCommitTree: Tree;
 
-  constructor(dirPath: string, tagFrom: string, tagTo: string) {
+  constructor(dirPath: string, tagFrom?: string, tagTo?: string) {
     this.tagFrom = tagFrom;
     this.tagTo = tagTo;
     this.dirPath = resolve(process.cwd(), dirPath);
@@ -22,11 +22,11 @@ export default class GitDiffTags {
       .then(this.diff);
   }
 
-  public getTagFrom() {
+  get getTagFrom(): string {
     return this.tagFrom;
   }
 
-  public getTagTo() {
+  get getTagTo(): string {
     return this.tagTo;
   }
 
