@@ -28,12 +28,26 @@ const diff = new GitDiffTags("./", "v0.2.0", "v0.2.0-a");
 // const diff = new GitDiffTags("./");
 
 
-diff.start()
-      .then((result) => {
-        // the diffs between v0.2.0 and v0.2.0-a
-        // result is a ConvenientPatch[]
-        // please reference to nodegit[ConvenientPatch]: http://www.nodegit.org/api/convenient_patch
+export interface IFileStatus {
+  path: string;
 
+  // refs: https://git-scm.com/docs/git-diff
+  // A: addition of a file
+  // C: copy of a file into a new one
+  // D: deletion of a file
+  // M: modification of the contents or mode of a file
+  // R: renaming of a file
+  // T: change in the type of the file
+  // U: file is unmerged (you must complete the merge before it can be committed)
+  // X: "unknown" change type (most probably a bug, please report it)
+  status: StatusTypes;
+}
+
+
+diff.start()
+      .then((result: IFileStatus[]) => {
+        // the diffs between v0.2.0 and v0.2.0-a
+        // result is an IFileStatus[]
       })
       .catch((err) => {
         throw(new Error(err));
@@ -72,8 +86,8 @@ gulp.task('image', function() {
         // find out what assets are modified or added since last tag.
         let addedFiles = [];
         result.forEach(patch => {
-          const filePath = patch.newFile().path();
-          if ((patch.isAdded() || patch.isModified()) && filePath.match(/^public\/image.*(\.png|\.gif)$/g))
+          const filePath = patch.path;
+          if ((patch.status === 'A' || patch.status === 'M') && filePath.match(/^public\/image.*(\.png|\.gif)$/g))
             addedFiles.push(filePath);
         });
 
@@ -87,18 +101,6 @@ gulp.task('image', function() {
 });
 
 ```
-
-## install troubleshooting
-
-If you can't install `nodegit` see link below.
-
-Mac:
-
-```
-sudo xcode-select --install
-```
-
-https://github.com/nodegit/nodegit/issues/1134
 
 ## License
 

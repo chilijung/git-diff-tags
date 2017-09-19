@@ -1,86 +1,76 @@
-import {Commit, ConvenientPatch, Diff, DiffFile, Oid, Repository, Tag, Tree} from "nodegit";
+/* tslint:disable no-console */
+import {execSync, spawn} from "child_process";
 import {resolve} from "path";
+
+export type StatusTypes = "A" | "C" | "D" | "M" | "R" | "T" | "U" | "X";
+
+export interface IFileStatus {
+  path: string;
+
+  // refs: https://git-scm.com/docs/git-diff
+  // A: addition of a file
+  // C: copy of a file into a new one
+  // D: deletion of a file
+  // M: modification of the contents or mode of a file
+  // R: renaming of a file
+  // T: change in the type of the file
+  // U: file is unmerged (you must complete the merge before it can be committed)
+  // X: "unknown" change type (most probably a bug, please report it)
+  status: StatusTypes;
+}
 
 export default class GitDiffTags {
   private tagFrom: string;
   private tagTo: string;
   private dirPath: string;
-  private headCommitTree: Tree;
-  private tagCommitTree: Tree;
 
   constructor(dirPath: string, tagFrom?: string, tagTo?: string) {
-    this.tagFrom = tagFrom;
-    this.tagTo = tagTo;
+    this.tagFrom = tagFrom || execSync("git describe --abbrev=0").toString().trim();
+    this.tagTo = tagTo || "";
     this.dirPath = resolve(process.cwd(), dirPath);
   }
 
-  public start(): Promise<ConvenientPatch[]> {
-    return Repository.open(this.dirPath)
-      .then(this.getTagFromCommit)
-      .then(this.getTagToCommit)
-      .then(this.diffTreeToTree)
-      .then(this.diff);
-  }
+  public start(): Promise<IFileStatus[]> {
+    let result = "";
+    const gitDiff = this.tagTo ? spawn("git", [
+      `--git-dir=${this.dirPath}/.git`,
+      "diff",
+      "--name-status",
+      this.tagFrom,
+      this.tagTo,
+    ]) : spawn("git", [
+      `--git-dir=${this.dirPath}/.git`,
+      "diff",
+      "--name-status",
+      this.tagFrom,
+    ]);
 
-  get getTagFrom(): string {
-    return this.tagFrom;
-  }
+    gitDiff.stdout.on("data", (data) => {
+      result += data.toString();
+    });
 
-  get getTagTo(): string {
-    return this.tagTo;
-  }
+    gitDiff.stderr.on("data", (data) => {
+      console.error(`git diff stderr: ${data}`);
+    });
 
-  private getTagToCommit = (repo: Repository): Promise<Repository> => {
-    const getTagTo = this.tagTo ? this.getTag(repo, this.tagTo) : repo.getHeadCommit();
-    return getTagTo
-            .then((commit) => {
-              return commit.getTree();
-            })
-            .then((tree) => {
-              this.headCommitTree = tree;
-              return repo;
-            });
-  }
+    return new Promise((resolved, reject) => {
+      gitDiff.on("close", (code) => {
+        if (code === 1) {
+          return reject("Git diff tags fail");
+        }
+        // split and remove last item
+        const resultArr = result.split("\n").slice(0, -1);
+        return resolved(resultArr.map((file) => {
+          const fileStatus = file.split("\t");
+          const status: StatusTypes = fileStatus[0] as StatusTypes;
+          const path: string = fileStatus[1];
 
-  private getTagFromCommit = (repo: Repository): Promise<Repository> => {
-    const getTagFrom = this.getTag(repo, this.tagFrom);
-    return getTagFrom
-      .then((commit) => {
-        return commit.getTree();
-      })
-      .then((tree) => {
-        this.tagCommitTree = tree;
-        return repo;
+          return {
+            path,
+            status,
+          };
+        }));
       });
-  }
-
-  private getTag(repo: Repository, getTagShort: string): Promise<Commit> {
-    return Tag.list(repo).then((arr) => {
-          if (!getTagShort) {
-            getTagShort = arr[arr.length - 1];
-            this.tagFrom = getTagShort;
-          }
-
-          // check if tags are exist.
-          if (arr.indexOf(getTagShort) === -1) {
-            // not found tag
-            throw new Error(`Make sure your tag is in the right name, can't find tag: ${getTagShort}`);
-          }
-          return repo.getTagByName(getTagShort);
-        })
-        .then((tag) => {
-          return repo.getCommit(tag.targetId());
-        })
-        .catch((e) => {
-          return repo.getReferenceCommit(getTagShort);
-        });
-  }
-
-  private diffTreeToTree = (repo: Repository): Promise<Diff> => {
-    return Diff.treeToTree(repo, this.tagCommitTree, this.headCommitTree, null);
-  }
-
-  private diff = (diff: Diff): Promise<ConvenientPatch[]> => {
-    return diff.patches();
+    });
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "git-diff-tags",
-  "version": "0.2.3",
+  "version": "1.0.0",
   "description": "git-diff-tags",
   "license": "MIT",
   "repository": "",
@@ -24,7 +24,6 @@
     "watch:test": "npm run test -- --watch"
   },
   "dependencies": {
-    "nodegit": "^0.18.3"
   },
   "devDependencies": {
     "@types/chai": "^3.0.0",
