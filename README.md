@@ -60,7 +60,7 @@ diff.start()
 
 create a reference. If `tagTo` is null diff from `tagFrom` to `HEAD`. if `tagFrom` is null set to last tag.
 
-### diffTag.start(): Promise<ConvenientPatch[]>
+### diffTag.start(): Promise<IFileStatus[]>
 
 return a ConvenientPath array, see http://www.nodegit.org/api/convenient_patch.
 
