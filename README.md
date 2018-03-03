@@ -1,5 +1,7 @@
 # git-diff-tags
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Canner/git-diff-tags.svg)](https://greenkeeper.io/)
+
 Using git diff to get change files between tags.
 
 ## Why?
